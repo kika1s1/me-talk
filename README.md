@@ -1,141 +1,132 @@
-# Me-Talk Telegram Userbot
+# Me-Talk 🤖
 
-A personalized Telegram userbot that represents me (Tamirat Kebede) and interacts with friends and colleagues using the Gemini AI model. The bot maintains context-aware conversations, understands both English and Amharic, and responds with my personality and expertise as a Software Engineer.
+<div align="center">
 
-## Features
+![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+[![License](https://img.shields.io/badge/License-ISC-blue.svg?style=for-the-badge)](LICENSE)
 
-- 🤖 Powered by Google's Gemini 2.0 Flash AI model
-- 💬 Supports both English and Amharic languages
-- 🧠 Maintains conversation context and history
-- 👤 Personalized responses based on my background and expertise
-- 📝 Automatic message history management with TTL
-- 🔄 Seamless integration with Telegram
-- 🗄️ MongoDB-based message storage
+</div>
 
-## Prerequisites
+## 📖 Overview
 
-Before running the bot, make sure you have:
+A personalized Telegram userbot powered by Gemini AI that acts as my digital twin. It maintains context-aware conversations in both English and Amharic, representing my personality and expertise as a Computer Science student at ASTU.
+
+### ✨ Key Features
+
+- 🤖 **AI-Powered**: Utilizes Google's Gemini 2.0 Flash model for intelligent responses
+- 🌍 **Bilingual**: Seamlessly handles both English and Amharic
+- 🧠 **Context-Aware**: Maintains conversation history and context
+- 👤 **Personalized**: Responds with my personality and expertise
+- 📝 **Auto-Managing**: Handles message history with TTL
+- 🔄 **Integrated**: Seamless Telegram integration
+- 🗄️ **Persistent**: MongoDB-based storage
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Before running the bot, ensure you have:
 
 - Node.js (v14 or higher)
 - MongoDB instance
-- Telegram API credentials (API ID and Hash)
+- Telegram API credentials
 - Google Gemini API key
 
-## Installation
+### Installation
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd me-talk
-```
+1. **Clone and Install**
+   ```bash
+   git clone <repository-url>
+   cd me-talk
+   npm install
+   ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+2. **Configure Environment**
+   
+   Create a `.env` file:
+   ```env
+   TELEGRAM_API_ID=your_telegram_api_id
+   TELEGRAM_API_HASH=your_telegram_api_hash
+   GEMINI_API_KEY=your_gemini_api_key
+   MONGODB_URI=your_mongodb_uri
+   MESSAGE_TTL_DAYS=7
+   ```
 
-3. Create a `.env` file in the root directory with the following configuration:
-```env
-TELEGRAM_API_ID=your_telegram_api_id
-TELEGRAM_API_HASH=your_telegram_api_hash
-GEMINI_API_KEY=your_gemini_api_key
-MONGODB_URI=your_mongodb_connection_string
-MESSAGE_TTL_DAYS=7
-```
+3. **Start the Bot**
+   ```bash
+   npm start
+   ```
 
-## Configuration
+### First Run Setup
 
-The bot is configured to represent me with the following context:
+On first run, you'll need to:
+1. Enter your phone number
+2. Input the Telegram verification code
+3. Provide 2FA password (if enabled)
 
-- Professional background as a Software Engineer with 3+ years experience
-- Expertise in MERN stack and Flutter development
-- Current role as Head of Education Intern at A2SV
-- Bilingual communication in English and Amharic
-- Professional yet friendly personality
+## 🎯 Features in Detail
 
-You can modify the system context in `src/services/geminiService.js` to customize the bot's personality and knowledge base.
+### 💬 Conversation Management
 
-## Project Structure
+- **History Tracking**: MongoDB-based chat history
+- **Auto Cleanup**: TTL-based message expiration
+- **User Context**: Maintains user information and preferences
+- **Language Detection**: Automatic Amharic/English detection
+
+### 🤖 AI Integration
+
+- **Fast Responses**: Gemini 2.0 Flash for quick processing
+- **Context Awareness**: Maintains conversation flow
+- **Technical Knowledge**: Leverages my CS background
+- **Personality Matching**: Maintains my communication style
+
+### 📊 System Architecture
 
 ```
 me-talk/
 ├── src/
-│   ├── controllers/
-│   │   └── messageController.js    # Message handling logic
-│   ├── models/
-│   │   └── Message.js             # MongoDB message schema
-│   ├── services/
-│   │   ├── geminiService.js       # AI integration
-│   │   └── telegramService.js     # Telegram client setup
-│   ├── utils/
-│   │   └── logger.js              # Logging utility
-│   ├── config/
-│   │   └── config.js             # Configuration management
-│   └── index.js                  # Application entry point
-├── package.json
-└── README.md
+│   ├── controllers/   # Message handling
+│   ├── models/        # Data schemas
+│   ├── services/      # Core services
+│   ├── utils/         # Utilities
+│   ├── config/        # Configuration
+│   └── index.js       # Entry point
 ```
 
-## Usage
+## 🛠️ Configuration
 
-1. Start the bot:
-```bash
-npm start
-```
+The bot represents me with the following context:
 
-2. On first run, you'll be prompted to:
-   - Enter your phone number
-   - Enter the verification code sent to your Telegram
-   - Enter your 2FA password (if enabled)
+- 🎓 Computer Science student at ASTU
+- 💻 Passionate about software development
+- 🌐 Bilingual (English & Amharic)
+- 👥 Professional yet friendly personality
 
-3. The bot will now respond to messages sent to your account, maintaining conversations and context.
+> Customize the bot's personality in `src/services/geminiService.js`
 
-## Features in Detail
+## ⚠️ Error Handling
 
-### Conversation Context
-- Maintains chat history with MongoDB
-- Automatically expires old messages based on TTL
-- Tracks user information and language preferences
-
-### Language Support
-- Automatically detects Amharic and English text
-- Responds in the same language as the received message
-- Handles multilingual conversations seamlessly
-
-### AI Integration
-- Uses Gemini 2.0 Flash for fast, context-aware responses
-- Maintains professional tone while being friendly
-- Leverages my technical background for relevant discussions
-
-### Message Management
-- Stores message history with user context
-- Tracks conversation language
-- Distinguishes between user and bot messages
-- Implements automatic cleanup of old messages
-
-## Error Handling
-
-The bot includes robust error handling for:
-- Invalid API credentials
-- Network issues
-- AI service disruptions
+Robust error handling for:
+- API credential issues
+- Network disruptions
+- Service interruptions
 - Message delivery failures
 
-## Contributing
+## 👤 About Me
 
-Feel free to submit issues and enhancement requests!
+**Tamirat Kebede**
+- 🎓 Computer Science Student at ASTU
+- 💻 Passionate about AI and Software Development
+- 🌐 Bilingual in English and Amharic
 
-## License
+## 📝 License
 
-ISC License
-
-## Contact
-
-Tamirat Kebede
-- LinkedIn: [Profile]
-- Role: Head of Education Intern at A2SV
-- Expertise: Software Engineering, AI Product Development
+This project is licensed under the ISC License.
 
 ---
 
-*Note: This is a personal userbot that represents me in Telegram conversations. It's designed to maintain my professional image while providing helpful and context-aware responses to friends and colleagues.*
+<div align="center">
+Made with ❤️ by <a href="https://github.com/kika1s1">Tamirat Kebede</a>
+</div>
