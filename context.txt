@@ -1,0 +1,73 @@
+# Project Context: Telegram Userbot with OpenAI & MongoDB
+
+## Overview
+This project is a **Telegram Userbot** built using **GramJS**, **OpenAI's API**, and **MongoDB (via Mongoose)**. The bot engages users in natural conversations while maintaining **context-aware** replies. It follows a **modular, clean code architecture** for scalability and maintainability.
+
+## Core Functionalities
+1. **Telegram Integration**: The bot listens to messages and responds appropriately.
+2. **OpenAI Integration**: Uses OpenAI's API to generate intelligent responses.
+3. **MongoDB (Mongoose) Storage**:
+   - Stores user messages for context-aware replies.
+   - Implements a **TTL-based cleanup mechanism**.
+4. **Logging**:
+   - Logs all incoming messages and responses.
+   - Logs deleted messages in a `logs.txt` file.
+5. **Configuration Management**:
+   - Uses environment variables (`.env`) for sensitive settings.
+   - Configurable message retention period via `MESSAGE_TTL_DAYS`.
+
+## Folder Structure
+```
+telegram-userbot/
+├── src/
+│   ├── config/            # Configuration settings
+│   ├── services/          # Service layer (OpenAI, Telegram, Database)
+│   ├── controllers/       # Handles message processing
+│   ├── models/            # Mongoose schemas for User & Messages
+│   ├── utils/             # Utility functions (logger, etc.)
+│   ├── index.js           # Entry point
+├── .env                   # Environment variables
+├── logs.txt               # Log file for message deletions
+├── context.txt            # This file (stores project context)
+├── README.md              # Project documentation
+```
+
+## Technical Details
+### 1. **Telegram Handling**
+- Uses **GramJS** for interaction.
+- Listens for messages and processes them via `handleMessage()`.
+
+### 2. **OpenAI Integration**
+- Uses `openaiService.js` to send messages to OpenAI.
+- Maintains a **conversation context** by fetching past messages from MongoDB.
+
+### 3. **MongoDB & Mongoose**
+- **User Schema** (`User.js`): Stores user IDs & usernames.
+- **Message Schema** (`Message.js`): Stores messages with a TTL-based expiration.
+
+### 4. **Message Cleanup Mechanism**
+- **TTL Index** (`expires: 86400 * MESSAGE_TTL_DAYS`) auto-deletes messages.
+- No admin command for TTL updates (configured via `.env`).
+
+### 5. **Logging**
+- All responses and message deletions are logged in `logs.txt`.
+- Uses `logger.js` for writing logs.
+
+## Future Enhancements
+- Add support for **custom bot commands**.
+- Improve **error handling and retries**.
+- Implement **multi-user context isolation**.
+
+## Configuration
+Ensure you have a `.env` file with:
+```
+TELEGRAM_API_ID=your_api_id
+TELEGRAM_API_HASH=your_api_hash
+OPENAI_API_KEY=your_openai_key
+MONGODB_URI=mongodb://localhost:27017/userbot
+MESSAGE_TTL_DAYS=7
+```
+
+---
+This context file helps LLMs understand the project's architecture and functionality. 🚀
+
