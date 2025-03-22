@@ -12,6 +12,10 @@ logs
 *.log
 npm-debug.log*
 
+# Project specific
+context.txt
+.gitmessage
+
 # Runtime data
 pids
 *.pid
