@@ -5,8 +5,10 @@ import { config } from '../config/config.js';
 
 const stringSession = new StringSession(config.SESSION_STRING); // Empty string for the first run
 
+// Will hold the connected client instance
+export let telegramClient;
+
 export async function createTelegramClient() {
-  console.log("Loading interactive example...");
   const client = new TelegramClient(
     stringSession,
     config.TELEGRAM_API_ID,
@@ -17,12 +19,12 @@ export async function createTelegramClient() {
   await client.start({
     phoneNumber: async () => await input.text("Please enter your number: "),
     password: async () => await input.text("Please enter your password: "),
-    phoneCode: async () =>
-      await input.text("Please enter the code you received: "),
+    phoneCode: async () => await input.text("Please enter the code you received: "),
     onError: (err) => console.log(err),
   });
   
   console.log("You should now be connected.");
-  console.log("Session string:", client.session.save());
+  // Save the connected client in the exported variable
+  telegramClient = client;
   return client;
 }

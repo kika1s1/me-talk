@@ -1,90 +1,77 @@
 import { getAIResponse } from "../services/geminiService.js";
 import { Message } from "../models/Message.js";
 import { logMessage } from "../utils/logger.js";
-import { Api } from 'telegram';
+import { telegramClient as client } from "../services/telegramService.js"; // Connected GramJS client
 
 export async function handleMessage(event) {
   const message = event.message;
   
   try {
-    // Debug logging
-    console.log('Processing message event:', {
-      messageId: message?.id,
-      fromId: message?.senderId,
-      text: message?.text,
-      chat: message?.chat,
-      firstName: message?.sender?.firstName,
-      lastName: message?.sender?.lastName
-    });
-
+    // Skip if there's no message or no text
     if (!message || !message.text) {
-      console.log('Skipping non-text message');
+      console.log("Skipping non-text message");
       return;
     }
-
-    // Extract the user ID and name from the message
+    
+    // Skip self-sent messages (messages sent by the userbot itself)
+    if (message.out) {
+      console.log("Skipping self-sent message");
+      return;
+    }
+    
+    // Only process private chats: Check that peerId exists and is of type "PeerUser"
+    if (!message.peerId || message.peerId.className !== "PeerUser") {
+      console.log("Skipping message from non-private chat");
+      return;
+    }
+    
+    // Extract the user ID and user name
     const userId = message.senderId?.value?.toString() || message.senderId?.toString();
-    const userName = [message.sender?.firstName, message.sender?.lastName]
-      .filter(Boolean)
-      .join(' ');
-
+    const userName = ([message.sender?.firstName, message.sender?.lastName]
+                      .filter(Boolean)
+                      .join(" ")) || userId;
+    
     if (!userId) {
-      console.log('Could not determine user ID, skipping message');
+      console.log("Could not determine user ID, skipping message");
       return;
     }
-
-    console.log(`Received message: ${message.text} from user ${userName || userId}`);
-
-    try {
-      // Retrieve previous messages for context from the DB
-      const previousMessages = await Message.find({
-        userId: userId
-      }).sort({ timestamp: 1 });
-      
-      const context = previousMessages.map((msg) => ({
-        role: msg.isFromBot ? "assistant" : "user",
-        content: msg.text,
-      }));
-
-      // Get AI response using the conversation context
-      const aiResponse = await getAIResponse(message.text, context);
-
-      // Send the response back to the chat
-      await event.message.reply({ message: aiResponse });
-
-      // Save both the user's message and the bot's response
-      await Message.create([
-        { 
-          userId: userId,
-          text: message.text,
-          userName: userName,
-          isFromBot: false,
-          language: detectLanguage(message.text)
-        },
-        {
-          userId: userId,
-          text: aiResponse,
-          userName: userName,
-          isFromBot: true,
-          language: detectLanguage(aiResponse)
-        }
-      ]);
-
-      logMessage(`Replied to ${userName || userId}: ${aiResponse}`);
-    } catch (error) {
-      console.error('AI Service Error:', error);
-      const errorMessage = error.message?.includes('API key') 
-        ? "Service configuration error. Please contact the administrator."
-        : "I apologize, but I'm currently unable to process your request. Please try again later.";
-      
-      try {
-        await event.message.reply({ message: errorMessage });
-      } catch (sendError) {
-        console.error('Failed to send error message:', sendError);
+    
+    console.log(`Received message from ${userName}`);
+    
+    // Retrieve previous messages for context from the DB
+    const previousMessages = await Message.find({ userId: userId }).sort({ timestamp: 1 });
+    const context = previousMessages.map((msg) => ({
+      role: msg.isFromBot ? "assistant" : "user",
+      content: msg.text,
+    }));
+    
+    // Get AI response using the conversation context
+    const aiResponse = await getAIResponse(message.text, context);
+    
+    // Send the response directly to the user (not as a reply)
+    await client.sendMessage(userId, { message: aiResponse });
+    
+    // Save both the user's message and the bot's response
+    await Message.create([
+      { 
+        userId: userId,
+        text: message.text,
+        userName: userName,
+        isFromBot: false,
+        language: detectLanguage(message.text)
+      },
+      {
+        userId: userId,
+        text: aiResponse,
+        userName: userName,
+        isFromBot: true,
+        language: detectLanguage(aiResponse)
       }
-    }
+    ]);
+    
+    logMessage(`Sent direct message to ${userName || userId}: ${aiResponse}`);
   } catch (error) {
-    console.error('Error handling message:', error);
+    console.error("Error handling message:", error);
   }
 }
 
@@ -92,5 +79,5 @@ export async function handleMessage(event) {
 function detectLanguage(text) {
   // Check if the text contains Amharic characters
   const amharicPattern = /[\u1200-\u137F]/;
-  return amharicPattern.test(text) ? 'am' : 'en';
+  return amharicPattern.test(text) ? "am" : "en";
 }
