@@ -25,6 +25,7 @@ export async function createTelegramClient() {
   
   console.log("You should now be connected.");
   // Save the connected client in the exported variable
+  console.log("Session string:", client.session.save());
   telegramClient = client;
   return client;
 }
