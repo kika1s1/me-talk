@@ -117,9 +117,9 @@ Robust error handling for:
 ## 👤 About Me
 
 **Tamirat Kebede**
-- 🎓 Computer Science Student at ASTU
+- 🎓Software Engineering Student at ASTU
 - 💻 Passionate about AI and Software Development
-- 🌐 Bilingual in English and Amharic
+- 🌐 Bilingual in English, Amharic and Afaan Oromo
 
 ## 📝 License
 
